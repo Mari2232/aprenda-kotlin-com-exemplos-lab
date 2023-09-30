@@ -2,24 +2,26 @@ import kotlin.collections.mutableListOf
 
 enum class Nivel { BASICO, INTERMEDIARIO, AVANÇADO }
 
-data class Usuario(val nome: String, val email: String, val tel: String, var curso: List<Formacao>)
+data class Usuario(val nome: String, val email: String, val tel: String, var cursos: MutableList<Formacao>)
 
 data class ConteudoEducacional(val nome: String, val duracao: Int, val dificuldade: Nivel) {
    
     val conteudo = mutableListOf<ConteudoEducacional>()
 }
 
-data class Formacao(val nome: String, var conteudos: List<ConteudoEducacional>) {
+data class Formacao(val nome: String, var conteudos: MutableList<ConteudoEducacional>, var matriculados: MutableList<Usuario>) {
     
     val form = mutableListOf<Formacao>()
 }
     
+val inscritos1 = mutableListOf<Usuario>()
+val inscritos2 = mutableListOf<Usuario>()
 
-val users = mutableListOf<Usuario>()
-//fun matricular(novoUser: Usuario()) { 
-    
- //   users.add(novoUser)                      
-//}
+fun matricular(novoUser: Usuario, formacao: Formacao) { 
+    formacao.matriculados.add(novoUser)
+    novoUser.cursos.add(formacao)
+                        
+}
     
 fun main() {
     //TODO("Analise as classes modeladas para este domínio de aplicação e pense em formas de evoluí-las.")
@@ -39,40 +41,30 @@ fun main() {
     )
     //println(conteudo2)
     
-    val form1 = mutableListOf<Formacao>(
-    	Formacao("Formação1", conteudo1)
-    )
-    //println(form1)
+    val form1 = Formacao("Formação1", conteudo1, inscritos1)   
     
-    val form2 = mutableListOf<Formacao>(
-    	Formacao("Formação2", conteudo2))
+    val form2 = Formacao("Formação2", conteudo2, inscritos2)
     
-    val users = mutableListOf<Usuario> (
-    	Usuario("Pedro", "pedro123@gmail.com", "61981456879", form1),
-        Usuario("Marina", "mari_na@gmail.com", "18981446600", form1),
-    )
-    println("Inscritos na Formação1:")
-    println(users)
     
-    val users2 = mutableListOf<Usuario> (
-    	Usuario("Julia", "juju@gmail.com", "66981156889", form2),
-        Usuario("Mariana", "mari_ana@gmail.com", "17981446600", form2),
-    )
-    println("Inscritos na Formação2:")
-    println(users2)
+    	val usuario1 = Usuario("Pedro", "pedro123@gmail.com", "61981456879", mutableListOf()) 
+        val usuario2 = Usuario("Marina", "mari_na@gmail.com", "18981446600", mutableListOf())   
+    	val usuario3 = Usuario("Julia", "juju@gmail.com", "66981156889", mutableListOf())
+        val usuario4 = Usuario("Mariana", "mari_ana@gmail.com", "17981446600", mutableListOf())
+        
     
-    val user = Usuario("Joana", "joana@gmail.com", "17985647854", form1)
-    println("Adicionado novo $user em $form1: ${users.add(user)}")
-    println(users)
-    
-    val user1 = Usuario("Patrick", "patrickebob@gmail.com", "41985647214", form2)
-    println("Adicionado novo $user1: ${users.add(user1)}") 
+   matricular(usuario1,form1)
+   matricular(usuario2,form2)
+   matricular(usuario3,form1)
+   matricular(usuario4,form2)
    
-    println(user1)
    
-    
-    val user2 = Usuario("Peter", "peter@gmail.com", "48975547214", form2)
-    println("Adicionado novo $user2: ${users.add(user2)}")
-    
-    
-}
+   println("Inscritos formacao1:\n")
+   form1.matriculados.forEach{ aluno ->
+       println("${aluno.nome}\n")
+   }  
+   
+    println("Inscritos formacao2:\n")
+   form2.matriculados.forEach{ aluno ->
+       println("${aluno.nome}\n")    
+       
+   }
